@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static  %}
+{% block content %}
+
+     <!-- main-area -->
+    <main class="fix">
+
+        <!-- breadcrumb-area -->
+        <section class="breadcrumb__area fix">
+            <div class="container">
+                <div class="row align-items-end">
+                    <div class="col-lg-8">
+                        <div class="breadcrumb__content">
+                            <h3 class="title">Cart</h3>
+                            <nav class="breadcrumb">
+                                <span property="itemListElement" typeof="ListItem">
+                                    <a href="{% url 'home' %}">Home</a>
+                                </span>
+                                <span class="breadcrumb-separator"><i class="flaticon-right-arrow-angle"></i></span>
+                                <span property="itemListElement" typeof="ListItem">Cart</span>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="breadcrumb__img">
+                            <img src="{% static 'assets/img/images/breadcrumb_img.png' %}" alt="img" data-aos="fade-left" data-aos-delay="800">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="breadcrumb__shape-wrap">
+                <img src="{% static 'assets/img/images/breadcrumb_shape01.png'%}" alt="img" data-aos="fade-down-right" data-aos-delay="400">
+                <img src="{% static 'assets/img/images/breadcrumb_shape02.png'%}" alt="img" data-aos="fade-up-left" data-aos-delay="400">
+            </div>
+        </section>
+        <!-- breadcrumb-area-end -->
+
+        <!-- product-area -->
+        <section class="product__area-four">
+            <div class="container">
+       
+            {% if not cart_items %}
+            <h2 class="text-center">Your Shopping Cart is Empty</h2><br>
+            <div  class="text-center"><a href="{% url 'store' %}" class="btn btn-primary">Continue Shopping</a></div>
+            {% else %}
+           
+             <div class="row">
+                <aside class="col-lg-8">
+                    <div class="card">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                            <th scope="col" class="text-muted">Product</th>
+                            <th scope="col"></th>
+                           
+                            <th scope="col" width="120" class="text-muted">Quantity</th>
+                            <th scope="col" width="120" class="text-muted">Price</th>
+                            <th scope="col" class="text-right" width="200"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cart_item in cart_items %}
+                                <tr>
+                                    <td>	
+                                        <div class="aside"><a href="{{ cart_item.product.get_url }}"><img src="{{ cart_item.product.images.url}}" style="width:80px; height:80px;" class="img-sm"></a></div>
+                                       
+		                            </td>
+                                    <td> <div class="info">
+                                            <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name}}</a>
+                                            <p class="small text-muted">
+                                            {% if cart_item.variations.all %}
+                                                {% for item in cart_item.variations.all  %}
+                                                    {{item.variation_category | capfirst}} : {{item.variation_value | capfirst}} <br/>
+                                                {% endfor %}
+                                            {% endif %}
+                                            </p>
+                                        </div></td>
+                                   
+                                    <td>	
+                                        <div class="product__details-qty">
+                                            	<a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="btn-light"  id="button-plus"> <i class="fa fa-minus"></i> </a>
+                                                <input type="text" class="form-control"  value="{{cart_item.quantity}}">
+                                               
+                                               <form action="{% url 'add_cart' cart_item.product.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    {% for item in cart_item.variations.all  %}
+                                                    <input type="hidden" name="{{ item.variation_category | lower }}" value="{{ item.variation_value | capfirst }}">
+                                                    {% endfor %}
+                                                    <button class="btn-light" type="submit" id="button-minus"> <i class="fa fa-plus"></i> </button>
+                                                </form>
+                                            </div>
+                                           
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="price-wrap"> 
+                                            <var class="price" style="font-weight:bold; display:block;">${{ cart_item.sub_total|floatformat:2}}</var> 
+                                            <small class="text-muted">${{ cart_item.product.price |floatformat:2}} each</small> 
+                                        </div> <!-- price-wrap .// -->
+                                    </td>
+                                    <td><a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Are you sure you want to delete this item?')" class="btn buy-btn">Remove</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </aside> <!-- col.// -->
+	            <aside class="col-lg-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <dl class="dlist-align">
+                                <dt>Total price: <span style="float:right;">${{ total |floatformat:2}}</span></dt>
+                               
+                            </dl>
+
+                            <dl class="dlist-align">
+                                <dt>Tax: <span style="float:right;"> ${{ tax |floatformat:2}}</span></dt>
+                                
+                            </dl>
+
+                            <dl class="dlist-align">
+                                <dt>Grand Total: <span style="float:right;"><strong>${{grand_total |floatformat:2}}</strong></span></dt>
+                            </dl>
+
+                            <hr>
+                            
+                            <a href="./place-order.html" class="btn btn-primary" style="width:100%; display:block">   Checkout  </a>
+                            <a href="{% url 'store' %}" class="btn" style="margin-top:5px; width:100%;display:block">Continue Shopping</a>
+                        </div> <!-- card-body.// -->
+                    </div> <!-- card.// -->
+                </aside>
+            </div>
+             {% endif %}
+             </div>
+        </section>
+        <!-- product-area-end -->
+
+    </main>
+    <!-- main-area-end -->
+
+{% endblock content %}
