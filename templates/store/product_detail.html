@@ -120,7 +120,7 @@
                                 </div>
                                <div class="product__size-wrap">
                                     <div class="size-title">Size: </div>
-                                    <select name="size" class="form-control">
+                                    <select name="size" class="form-control" required>
                                         <option value="" disabled selected>Chose Size</option>
                                         {% for i in  single_product.variation_set.sizes %}
                                         <option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst}}</option>

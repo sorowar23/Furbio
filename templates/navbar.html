@@ -93,18 +93,20 @@
                                 </div>
                                 <div class="tgmenu__action tgmenu__action-three d-none d-md-block">
                                     <ul class="list-wrap">
-                                        <li class="header-login">
+                                       <!-- <li class="header-login">
                                             <a href="contact.html">
                                                 <i class="flaticon-user"></i>
                                             </a>
-                                        </li>
-                                        <li class="header-wishlist">
-                                            <a href="javascript:void(0)">
-                                                <i class="flaticon-love"></i>
-                                            </a>
-                                        </li>
+                                        </li> -->
+                                        {% if user.id is None %}
+                                        <li class="header-btn login-btn"><a href="{% url 'login' %}" class="btn">Sign in</a></li>
+										<li class="header-btn login-btn"><a href="{% url 'register' %}" class="btn">Register</a></li>
+                                        {% else %}
+                                        <li class="header-btn login-btn"><a href="#" class="btn">Dashboard</a></li>
+										<li class="header-btn login-btn"><a href="{% url 'logout' %}" class="btn">Logout</a></li>
+                                        {% endif %}
                                         <li class="header-cart header-cart-two">
-                                            <strong class="price">${{ total |floatformat:2}}</strong>
+                                            <!-- <strong class="price">${{ total |floatformat:2}}</strong>-->
                                             <a href="{% url 'cart' %}">
                                                 <i class="flaticon-shopping-bag"></i>
                                                 <span>{{cart_count}}</span>

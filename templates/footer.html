@@ -133,6 +133,9 @@
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script>
         SVGInject(document.querySelectorAll("img.injectable"));
+        setTimeout(function(){
+            $('#message').fadeout('slow')
+        },4000)
     </script>
 </body>
 
