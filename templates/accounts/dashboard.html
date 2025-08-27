@@ -14,14 +14,14 @@
                         {% if 'search' in request.path %}
                             <h3 class="title">Search Result</h3>
                         {% else %}
-                            <h3 class="title">Our Store</h3>
+                            <h3 class="title">Dashboard</h3>
                         {% endif %}
                             <nav class="breadcrumb">
                                 <span property="itemListElement" typeof="ListItem">
                                     <a href="{% url 'home'%}">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="flaticon-right-arrow-angle"></i></span>
-                                <span property="itemListElement" typeof="ListItem"><a href="{% url 'store'%}">All Products</a></span>
+                                <span property="itemListElement" typeof="ListItem">Dashboard</span>
                             </nav>
                     </div>
                 </div>

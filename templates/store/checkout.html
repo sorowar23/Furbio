@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static  %}
+{% block content %}
+     <!-- main-area -->
+    <main class="fix">
+
+        <!-- breadcrumb-area -->
+        <section class="breadcrumb__area fix">
+            <div class="container">
+                <div class="row align-items-end">
+                    <div class="col-lg-8">
+                        <div class="breadcrumb__content">
+                            <h3 class="title">Checkout</h3>
+                            <nav class="breadcrumb">
+                                <span property="itemListElement" typeof="ListItem">
+                                    <a href="{% url 'home' %}">Home</a>
+                                </span>
+                                <span class="breadcrumb-separator"><i class="flaticon-right-arrow-angle"></i></span>
+                                <span property="itemListElement" typeof="ListItem">Checkout</span>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="breadcrumb__img">
+                            <img src="{% static 'assets/img/images/breadcrumb_img.png' %}" alt="img" data-aos="fade-left" data-aos-delay="800">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="breadcrumb__shape-wrap">
+                <img src="{% static 'assets/img/images/breadcrumb_shape01.png'%}" alt="img" data-aos="fade-down-right" data-aos-delay="400">
+                <img src="{% static 'assets/img/images/breadcrumb_shape02.png'%}" alt="img" data-aos="fade-up-left" data-aos-delay="400">
+            </div>
+        </section>
+        <!-- breadcrumb-area-end -->
+
+        <!-- product-area -->
+        <section class="product__area-four">
+            <div class="container">
+             <div class="row">
+                <aside class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Billing Address</h4>
+                            <form action="#" method="POST">
+                            {% csrf_token %}
+                            <div class="row gutter-20">
+                                <div class="col-md-6">
+                                    <div class="form-grp">
+                                        <label for="">First Name</label>
+                                        <input type="text" name="first_name" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-grp">
+                                        <label for="">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" required>
+                                    </div>
+                                </div>
+
+                            <div class="col-md-6">
+                                <div class="form-grp">
+                                    <label for="">Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-grp">
+                                    <label for="">Phone Number</label>
+                                    <input type="text" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label for="">Address:</label>
+                                    <input type="text" name="address_line_1" class="form-control" required>
+                                </div>
+                            </div>
+
+                           <div class="col-md-4">
+                               <div class="form-group">
+                                    <label for="">City</label>
+                                    <input type="text" name="city" class="form-control" required>
+                                </div>
+                            </div>
+                             <div class="col-md-4">
+                               <div class="form-group">
+                                    <label for="">State</label>
+                                    <input type="text" name="state" class="form-control" required>
+                                </div>
+                            </div>
+                             <div class="col-md-4">
+                               <div class="col form-group">
+                                    <label for="">Country</label>
+                                    <input type="text" name="country" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                    <label for="">Order Note</label>
+                                    <textarea name="order_note" rows="2" class="form-control"></textarea>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside> <!-- col.// -->
+	            <aside class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                                <table class="table table-borderless table-shopping-cart">
+                                <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                <th scope="col" class="text-muted">Product</th>
+                                <th scope="col"></th>
+                            
+                                <th scope="col" width="120" class="text-muted">Quantity</th>
+                                <th scope="col" width="120" class="text-muted">Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td>	
+                                            <div class="aside"><a href="{{ cart_item.product.get_url }}"><img src="{{ cart_item.product.images.url}}" style="width:80px; height:80px;" class="img-sm"></a></div>
+                                        
+                                        </td>
+                                        <td> <div class="info">
+                                                <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name}}</a>
+                                                <p class="small text-muted">
+                                                {% if cart_item.variations.all %}
+                                                    {% for item in cart_item.variations.all  %}
+                                                        {{item.variation_category | capfirst}} : {{item.variation_value | capfirst}} <br/>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                </p>
+                                            </div></td>
+                                    
+                                        <td>	
+                                            <label class="text-center">{{cart_item.quantity}}</label>
+                                        </td>
+                                        <td>
+                                            <div class="price-wrap"> 
+                                                <var class="price" style="font-weight:bold; display:block;">${{ cart_item.sub_total|floatformat:2}}</var> 
+                                                <small class="text-muted">${{ cart_item.product.price |floatformat:2}} each</small> 
+                                            </div> <!-- price-wrap .// -->
+                                        </td>
+                                        
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <hr>
+                            <button type="submit" name="submit" class="btn btn-primary btn-block"  style="width:100%; display:block">Place Order</button>
+                            <a href="{% url 'store' %}" class="btn" style="margin-top:5px; width:100%;display:block">Continue Shopping</a>
+                          </form>
+                        </div> <!-- card-body.// -->
+                    </div> <!-- card.// -->
+                </aside>
+            </div>
+        </div>
+        </section>
+        <!-- product-area-end -->
+
+    </main>
+    <!-- main-area-end -->
+
+{% endblock content %}
