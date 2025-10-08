@@ -56,25 +56,32 @@
                                     <div class="row gutter-20">
                                         <div class="col-md-12">
                                             <div class="form-grp">
-					                    	<input type="text" class="form-control" placeholder="Email Address" name="email">
+					                    	<input type="text" class="form-control email_address" id="user_id" placeholder="Email Address"  name="email">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-grp">
-					                    	<input type="password" class="form-control" placeholder="Password" name="password">
+					                    	<input type="password" class="form-control user_password" id="user_password" placeholder="Password" name="password">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-grp">
-          	                                    <a href="{% url 'forgotPassword' %}" class="float-right" style="float:right;">Forgot password?</a> 
+          	                                    <a href="{% url 'forgotPassword' %}" class="float-right forgot_password" id="forgot_password" style="float:right;">Forgot password?</a> 
                                             </div> <!-- form-group form-check .// -->
                                         </div>
+
+                                        <div class="col-md-12">
+                                        <div class="form-grp">
+                                        User ID:dumy_user@gmail.com<br/>
+                                        Password:user@123
+                                        </div> <!-- form-group form-check .// -->
+                                    </div>
                                         
                                     </div>
                                      <div class="col-md-12">
-                                    <button type="submit" class="btn">Log In <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt=""  class="injectable"></button></div>
+                                    <button type="submit" class="btn submit" id="login_btn">Log In <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt=""  class="injectable"></button></div>
                                 </form>
-                                 <p class="text-center mt-4">Don't have account? <a href="{% url 'register' %}">Sign up</a></p>
+                                 <p class="text-center sign_up_link mt-4">Don't have account? <a href="{% url 'register' %}">Sign up</a></p>
                             </div>
                         </div>
                         <div class="col-lg-4">

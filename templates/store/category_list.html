@@ -1,0 +1,7 @@
+<ul>
+  {% for category in categories %}
+    <li>
+      {{ category.category_name }} ({{ category.product_count }})
+    </li>
+  {% endfor %}
+</ul>

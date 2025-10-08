@@ -57,24 +57,15 @@
                                 <div class="tgmenu__navbar-wrap tgmenu__navbar-wrap-two tgmenu__main-menu d-none d-xl-flex">
                                     <ul class="navigation">
                                         <li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'home' %}">Home</a></li>
-                                        <li><a href="about.html">About</a></li>
+                                        <li class="{% if request.path == '/about/' %}active{% endif %}"><a href="{% url 'about' %}">About</a></li>
                                         <li class="{% if request.path == '/store/' %}active{% endif %}"><a href="{% url 'store' %}">Our Store</a> </li>
                                         <li class="menu-item-has-children"><a href="#">Pages</a>
                                             <ul class="sub-menu">
-                                                <li><a href="animal.html">All Pets</a></li>
-                                                <li><a href="animal-details.html">Pet Details</a></li>
-                                                <li><a href="gallery.html">Gallery</a></li>
-                                                <li><a href="faq.html">Faq Page</a></li>
-                                                <li><a href="pricing.html">Pricing Page</a></li>
-                                                <li><a href="reservation.html">Reservation Page</a></li>
-                                                <li><a href="team.html">Our Team</a></li>
-                                                <li><a href="team-details.html">Team Details</a></li>
-                                                <li><a href="blog.html">Our Blog</a></li>
-                                                <li><a href="blog-details.html">Blog Details</a></li>
-                                                <li><a href="error.html">404 Error Page</a></li>
+                                                <li class="{% if request.path == '/faq/' %}active{% endif %}"><a href="{% url 'faq' %}">Faq Page</a></li>
+                                                <li class="{% if request.path == '/team/' %}active{% endif %}"><a href="{% url 'team' %}">Our Team</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="contact.html">contacts</a></li>
+                                        <li class="{% if request.path == '/contact/' %}active{% endif %}"><a href="{% url 'contact' %}">contacts</a></li>
                                     </ul>
                                 </div>
                                 <div class="tgmenu__search">

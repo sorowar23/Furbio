@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product, Variation
 from .models import Cart, CartItem
@@ -12,8 +13,15 @@ def _cart_id(request):
     return cart
 
 def add_cart(request, product_id):
+    
     current_user = request.user
     product = Product.objects.get(id=product_id) #get the product
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+        if quantity < 1:
+            quantity = 1
+    except (ValueError, TypeError):
+        quantity = 1
     # If the user is authenticated
     if current_user.is_authenticated:
         product_variation = []
@@ -56,7 +64,7 @@ def add_cart(request, product_id):
         else:
             cart_item = CartItem.objects.create(
                 product = product,
-                quantity = 1,
+                quantity = quantity,
                 user = current_user,
             )
             if len(product_variation) > 0:
@@ -159,19 +167,23 @@ def remove_cart_item(request, product_id, cart_item_id):
 
 
 def cart(request, total=0, quantity=0, cart_items=None):
-
+    total = Decimal("0.00")
+    quantity = 0
+    cart_items = None
+    tax = Decimal("0.00")
+    grand_total = Decimal("0.00")
     try:
-        tax = 0
-        grand_total = 0
+       
         if request.user.is_authenticated:
              cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
             cart = Cart.objects.get(cart_id = _cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
+            total += (cart_item.product.get_display_price() * cart_item.quantity)
             quantity += cart_item.quantity
-            tax = (8.75 * total)/100
+            TAX_RATE = Decimal("8.875")
+            tax = (TAX_RATE * total) / Decimal("100")
             grand_total = tax + total
     except ObjectDoesNotExist:
         pass
@@ -197,9 +209,10 @@ def checkout(request, total=0, quantity=0, cart_items=None):
             cart = Cart.objects.get(cart_id = _cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
+            total += (cart_item.product.get_display_price() * cart_item.quantity)
             quantity += cart_item.quantity
-            tax = (8.75 * total)/100
+            TAX_RATE = Decimal("8.875")
+            tax = (TAX_RATE * total) / Decimal("100")
             grand_total = tax + total
     except ObjectDoesNotExist:
         pass

@@ -19,7 +19,7 @@
                                     <div class="slider__content">
                                         <h1 class="title">Pet Healthy Food <br> & Accessories</h1>
                                         <h4 class="sub-title">Delicious Food Make With Love</h4>
-                                        <a href="product.html" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
+                                        <a href="{% url 'store' %}" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
                                         <div class="discount__shape">
                                             <img src="assets/img/banner/sale.svg" alt="" class="injectable">
                                             <h2 class="title">30% <span>Flat Sale!</span></h2>
@@ -31,7 +31,7 @@
                                     <div class="slider__content">
                                         <h1 class="title">Pet Healthy Food <br> & Accessories</h1>
                                         <h4 class="sub-title">Delicious Food Make With Love</h4>
-                                        <a href="product.html" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
+                                        <a href="{% url 'store' %}" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
                                         <div class="discount__shape">
                                             <img src="{% static 'assets/img/banner/sale.svg' %}" alt="" class="injectable">
                                             <h2 class="title">50% <span>Flat Sale!</span></h2>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="banner__post-content-two">
                                     <h2 class="title">For Your <br> Pet Busket</h2>
-                                    <a href="product.html" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
+                                    <a href="{% url 'store' %}" class="btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
                                 </div>
                                 <div class="discount__shape-two">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 74" fill="none" preserveAspectRatio="none">
@@ -173,19 +173,17 @@
                             <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
                                 <div class="swiper product-active">
                                     <div class="swiper-wrapper">
-                                      {% for product in products  %}
+                                      {% for product in featured_products  %}
 									    <div class="swiper-slide">
                                             <div class="product__item">
                                                 <div class="product__thumb">
                                                     <a href="{{ product.get_url}}"><img src="{{ product.images.url }}" alt="img"></a>
-                                                    <div class="product__action">
-                                                        <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                        <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                        <a href="product-details.html"><i class="flaticon-exchange"></i></a>
+                                                     {% if product.sale_price %}
+                                                    <div class="sale-wrap sale-wrap-two">
+                                                        <span>Sale!</span>
                                                     </div>
-                                                    <div class="sale-wrap">
-                                                        <span>New</span>
-                                                    </div>
+                                                    {% endif %}
+
                                                     <div class="product__add-cart">
                                                       {% if product.stock <= 0  %}
                                                             <a href="#" class="btn"><i class="flaticon-shopping-bag"></i>Out of Stock</a>
@@ -196,17 +194,34 @@
                                                 </div>
                                                 <div class="product__content">
                                                     <div class="product__reviews">
-                                                        <div class="rating">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
+                                                        {% if product.averageReview > 0 %}
+                                                        <div class="rating-star">
+                                                            <span>
+                                                                <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                                            ({{product.countReview}} reviews) </span>
                                                         </div>
-                                                        <span>(2 Reviews)</span>
+                                                        {% else %}
+                                                        <div class="rating-star">
+                                                            <span>
+                                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                            ({{product.countReview}} reviews) </span>
+                                                        </div>
+                                                        {% endif %}
                                                     </div>
                                                     <h4 class="title"><a href="{{ product.get_url}}">{{ product.product_name}}</a></h4>
-                                                    <h3 class="price">${{ product.price |floatformat:2 }}</h3>
+                                                    {% if product.sale_price %}
+                                                        <h3 class="price"> ${{ product.sale_price  |floatformat:2 }} <del>${{ product.price |floatformat:2 }}</del></h3>
+                                                    {% else %}
+                                                        <h3 class="price">${{ product.price  |floatformat:2 }}</h3>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
@@ -635,65 +650,25 @@
                     </div>
                     <div class="col-md-4">
                         <div class="view-all-btn">
-                            <a href="product.html">See All Categories <i class="flaticon-right-arrow-angle"></i></a>
+                            <a href="{% url 'store' %}">See All Categories <i class="flaticon-right-arrow-angle"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="row row-cols-2 row-cols-lg-6 row-cols-md-4 row-cols-sm-3 justify-content-center">
+
+                 {% for category in product_count_by_categories %}
+    
                     <div class="col">
                         <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img01.png' %}" alt="">
-                                <span class="name">Beds</span>
-                                <strong>15 Items</strong>
+                            <a href="{{ category.get_url }}">
+                                <img src="{{ category.cat_image.url }}" alt="">
+                                <span class="name">{{ category.category_name }}</span>
+                                <strong>{{category.product_count}} Items</strong>
                             </a>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img02.png' %}" alt="">
-                                <span class="name">Pet Toys</span>
-                                <strong>10 Items</strong>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img03.png' %}" alt="">
-                                <span class="name">Dog Food</span>
-                                <strong>19 Items</strong>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img04.png' %}" alt="">
-                                <span class="name">Cat Food</span>
-                                <strong>15 Items</strong>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img05.png' %}" alt="">
-                                <span class="name">Pharmacy</span>
-                                <strong>30 Items</strong>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="category__item">
-                            <a href="product.html">
-                                <img src="{% static 'assets/img/category/category_img06.png' %}" alt="">
-                                <span class="name">Accessories</span>
-                                <strong>22 Items</strong>
-                            </a>
-                        </div>
-                    </div>
+                {% endfor %}  
+               
                 </div>
             </div>
         </section>
@@ -734,167 +709,66 @@
             <div class="container custom-container-two">
                 <div class="product__item-wrap-two">
                     <div class="row gutter-20 row-cols-1 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 justify-content-center">
+                        <!-- Start Hot Sale Product Block -->
+                        {% for product in hot_sale_products  %}
                         <div class="col">
                             <div class="product__item">
                                 <div class="product__thumb">
-                                    <a href="product-details.html"><img src="{% static 'assets/img/products/products_img06.jpg' %}" alt="img"></a>
-                                    <div class="product__action">
+                                    <a href="{{ product.get_url }}"><img src="{{ product.images.url }}" alt="img"></a>
+                                 <!--   <div class="product__action">
                                         <a href="product-details.html"><i class="flaticon-love"></i></a>
                                         <a href="product-details.html"><i class="flaticon-loupe"></i></a>
                                         <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                    </div>
+                                    </div>-->
                                     <div class="sale-wrap sale-wrap-two">
                                         <span>Sale!</span>
                                     </div>
-                                    <div class="product__add-cart">
-                                        <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
+                                     <div class="product__add-cart">
+                                        {% if product.stock <= 0  %}
+                                            <a href="#" class="btn"><i class="flaticon-shopping-bag"></i>Out of Stock</a>
+                                        {%else%}
+                                            <a href="{% url 'add_cart' product.id %}" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="product__content">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
+                                <div class="product__reviews">
+                                    {% if product.averageReview > 0 %}
+                                    <div class="rating-star">
+                                        <span>
+                                            <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                            <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                            <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                            <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                            <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                        ({{product.countReview}} reviews) </span>
                                     </div>
-                                    <h4 class="title"><a href="product-details.html">Dog Puzzle Toys, Squeaky Treat Dispensing Dog</a></h4>
-                                    <h3 class="price">$18.00 <del>$33.00</del></h3>
+                                    {% else %}
+                                    <div class="rating-star">
+                                        <span>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                        ({{product.countReview}} reviews) </span>
+                                    </div>
+                                    {% endif %}
+                                    </div>
+                                    <h4 class="title"><a href="{{ product.get_url }}">{{ product.product_name}}</a></h4>
+                                    <h3 class="price">
+                                    {% if product.sale_price %}
+                                        ${{ product.sale_price  |floatformat:2 }} <del>${{ product.price |floatformat:2 }}</del>
+                                    {% else %}
+                                        ${{ product.price  |floatformat:2 }}
+                                    {% endif %}
+
+                                    </h3>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="product__item">
-                                <div class="product__thumb">
-                                    <a href="product-details.html"><img src="{% static 'assets/img/products/products_img07.jpg' %}" alt="img"></a>
-                                    <div class="product__action">
-                                        <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                    </div>
-                                    <div class="sale-wrap sale-wrap-two">
-                                        <span>Sale!</span>
-                                    </div>
-                                    <div class="product__add-cart">
-                                        <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                    </div>
-                                </div>
-                                <div class="product__content">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
-                                    </div>
-                                    <h4 class="title"><a href="product-details.html">Zesty Paws Calming Puppy Bites Stress Relief for Dogs, 60 Count</a></h4>
-                                    <h3 class="price">$16.00 <del>$50.00</del></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product__item">
-                                <div class="product__thumb">
-                                    <a href="product-details.html"><img src="{% static 'assets/img/products/products_img08.jpg' %}" alt="img"></a>
-                                    <div class="product__action">
-                                        <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                    </div>
-                                    <div class="sale-wrap sale-wrap-two">
-                                        <span>Sale!</span>
-                                    </div>
-                                    <div class="product__add-cart">
-                                        <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                    </div>
-                                </div>
-                                <div class="product__content">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
-                                    </div>
-                                    <h4 class="title"><a href="product-details.html">Hartz Groomer's Best Extra Gentle Puppy Shampoo, 18oz.</a></h4>
-                                    <h3 class="price">$30.00 <del>$88.00</del></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product__item">
-                                <div class="product__thumb">
-                                    <a href="product-details.html"><img src="{% static 'assets/img/products/products_img09.jpg' %}" alt="img"></a>
-                                    <div class="product__action">
-                                        <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                    </div>
-                                    <div class="sale-wrap sale-wrap-two">
-                                        <span>Sale!</span>
-                                    </div>
-                                    <div class="product__add-cart">
-                                        <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                    </div>
-                                </div>
-                                <div class="product__content">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
-                                    </div>
-                                    <h4 class="title"><a href="product-details.html">The Kitten House with Mat Sleeping Bed House</a></h4>
-                                    <h3 class="price">$22.00 <del>$59.00</del></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product__item">
-                                <div class="product__thumb">
-                                    <a href="product-details.html"><img src="{% static 'assets/img/products/products_img10.jpg' %}" alt="img"></a>
-                                    <div class="product__action">
-                                        <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                        <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                    </div>
-                                    <div class="sale-wrap sale-wrap-two">
-                                        <span>Sale!</span>
-                                    </div>
-                                    <div class="product__add-cart">
-                                        <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                    </div>
-                                </div>
-                                <div class="product__content">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
-                                    </div>
-                                    <h4 class="title"><a href="product-details.html">Dog Harness-Neoprene
-                                    Comfort Liner-Orange and Comfort</a></h4>
-                                    <h3 class="price">$11.00 <del>$48.00</del></h3>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
+                        <!-- End  Hot Sale Product Block -->
                     </div>
                 </div>
             </div>
@@ -917,7 +791,7 @@
                             <div class="features__content-two">
                                 <h2 class="title">30% <span>Sale!</span></h2>
                                 <strong>Free Shipping</strong>
-                                <a href="product.html" class="btn shop-btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
+                                <a href="{% url 'store' %}" class="btn shop-btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
                             </div>
                         </div>
                     </div>
@@ -929,7 +803,7 @@
                             <div class="features__content-two features__content-three">
                                 <h2 class="title">Best Premium</h2>
                                 <strong>Cat Food</strong>
-                                <a href="product.html" class="btn shop-btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
+                                <a href="{% url 'store' %}" class="btn shop-btn">Shop Now <img src="{% static 'assets/img/icon/right_arrow.svg' %}" alt="" class="injectable"></a>
                             </div>
                         </div>
                     </div>
@@ -952,7 +826,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="view-all-btn">
-                                        <a href="product.html">See All <i class="flaticon-right-arrow-angle"></i></a>
+                                        <a href="{% url 'store' %}">See All <i class="flaticon-right-arrow-angle"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -1024,7 +898,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="view-all-btn">
-                                        <a href="product.html">See All <i class="flaticon-right-arrow-angle"></i></a>
+                                        <a href="{% url 'store' %}">See All <i class="flaticon-right-arrow-angle"></i></a>
                                     </div>
                                 </div>
                             </div>

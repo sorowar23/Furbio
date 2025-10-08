@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+
  <!-- main-area -->
     <main class="fix">
 
@@ -41,48 +42,43 @@
                     <div class="col-lg-6">
                         <div class="product__details-images-wrap">
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane show active" id="itemOne-tab-pane" role="tabpanel" aria-labelledby="itemOne-tab" tabindex="0">
+                              <!-- Main image -->
+                               {% if single_product.images %}
+                                <div class="tab-pane show active" id="item1-tab-pane" role="tabpanel" aria-labelledby="item1-tab" tabindex="0">
                                     <a href="{{single_product.images.url}}" class="popup-image">
                                         <img src="{{single_product.images.url}}" alt="img">
                                     </a>
                                 </div>
-                                <div class="tab-pane" id="itemTwo-tab-pane" role="tabpanel" aria-labelledby="itemTwo-tab" tabindex="0">
-                                    <a href="{% static 'assets/img/products/products_img02.jpg' %}" class="popup-image">
-                                        <img src="{% static 'assets/img/products/products_img02.jpg' %}" alt="img">
-                                    </a>
-                                </div>
-                                <div class="tab-pane" id="itemThree-tab-pane" role="tabpanel" aria-labelledby="itemThree-tab" tabindex="0">
-                                    <a href="{% static 'assets/img/products/products_img03.jpg' %}" class="popup-image">
-                                        <img src="{% static 'assets/img/products/products_img03.jpg' %}" alt="img">
-                                    </a>
-                                </div>
-                                <div class="tab-pane" id="itemFour-tab-pane" role="tabpanel" aria-labelledby="itemFour-tab" tabindex="0">
-                                    <a href="{% static 'assets/img/products/products_img04.jpg' %}" class="popup-image">
-                                        <img src="{% static 'assets/img/products/products_img04.jpg' %}" alt="img">
-                                    </a>
-                                </div>
+                                {% endif %}
+                                <!-- Gallery images -->
+                                {% for img in single_product.gallery.all %}
+                                    <div class="tab-pane" id="item{{ forloop.counter|add:'1'}}-tab-pane" role="tabpanel" aria-labelledby="item_{{ forloop.counter|add:'1'}}-tab" tabindex="0">
+                                        <a href="{{img.gallery_image.url}}" class="popup-image"> <img src="{{img.gallery_image.url}}" alt="img"></a>
+                                    </div>
+                                {% empty %}
+                                    
+                                {% endfor %}
+                               
                             </div>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                 {% if single_product.images %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="itemOne-tab" data-bs-toggle="tab" data-bs-target="#itemOne-tab-pane" type="button" role="tab" aria-controls="itemOne-tab-pane" aria-selected="true">
+                                    <button class="nav-link active" id="item1-tab" data-bs-toggle="tab" data-bs-target="#item1-tab-pane" type="button" role="tab" aria-controls="item1-tab-pane" aria-selected="true">
                                         <img src="{{single_product.images.url}}" alt="img">
                                     </button>
                                 </li>
+                                 {% endif %}
+                                 {% for img in single_product.gallery.all %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="itemTwo-tab" data-bs-toggle="tab" data-bs-target="#itemTwo-tab-pane" type="button" role="tab" aria-controls="itemTwo-tab-pane" aria-selected="false">
-                                        <img src="{% static 'assets/img/products/products_img02.jpg' %}" alt="img">
+                                    <button class="nav-link" id="item{{ forloop.counter|add:'1'}}-tab" data-bs-toggle="tab" data-bs-target="#item{{ forloop.counter|add:'1'}}-tab-pane" type="button" role="tab" aria-controls="item{{ forloop.counter|add:'1'}}-tab-pane" aria-selected="false">
+                                        <img src="{{img.gallery_image.url}}" alt="img">
                                     </button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="itemThree-tab" data-bs-toggle="tab" data-bs-target="#itemThree-tab-pane" type="button" role="tab" aria-controls="itemThree-tab-pane" aria-selected="false">
-                                        <img src="{% static 'assets/img/products/products_img03.jpg' %}" alt="img">
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="itemFour-tab" data-bs-toggle="tab" data-bs-target="#itemFour-tab-pane" type="button" role="tab" aria-controls="itemFour-tab-pane" aria-selected="false">
-                                        <img src="{% static 'assets/img/products/products_img04.jpg' %}" alt="img">
-                                    </button>
-                                </li>
+                                 {% empty %}
+                                    
+                                {% endfor %}
+                              
                             </ul>
                         </div>
                     </div>
@@ -93,22 +89,40 @@
                                 <span class="tag">{{single_product.category.category_name}}</span>
                                 <h2 class="title">{{single_product.product_name}}</h2>
                                 <div class="product__reviews-wrap">
-                                    <div class="product__reviews">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span>(2 Reviews)</span>
+                                {% if single_product.averageReview > 0 %}
+                                    <div class="rating-star">
+                                        <span>
+                                        <i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                        <i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                        <i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                        <i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                        <i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                            <span>({{single_product.countReview}} reviews)</span>
+                                        </span>
                                     </div>
+                                    {% else %}
+                                    <div class="rating-star">
+                                        <span>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            ({{single_product.countReview}} reviews) </span>
+                                    </div>
+                                    {% endif %}
                                     <div class="product__code">
                                         <span>SKU: <strong>CAT4502</strong></span>
                                     </div>
                                 </div>
-                                <h4 class="price">${{single_product.price |floatformat:2}}</h4>
+                                
+                                 {% if single_product.sale_price %}
+                                <h4 class="price"> ${{ single_product.sale_price  |floatformat:2 }} <del style="color:#B9BDC8;">${{ single_product.price |floatformat:2 }}</del></h4>
+                                {% else %}
+                                    <h4 class="price">${{ single_product.price  |floatformat:2 }}</h4>
+                                {% endif %}
                                 <p>{{single_product.description}}</p>
+                                 {% if single_product.variation_set.colors %}
                                  <div class="product__size-wrap">
                                     <div class="size-title">Color:</div>
                                     <select name="color" class="form-control" required>
@@ -118,6 +132,8 @@
                                     {% endfor %}
                                     </select>      
                                 </div>
+                               {% endif %}
+                               {% if single_product.variation_set.sizes %}
                                <div class="product__size-wrap">
                                     <div class="size-title">Size: </div>
                                     <select name="size" class="form-control" required>
@@ -127,19 +143,30 @@
                                         {% endfor %}
                                     </select>      
                                 </div>
-                                
-                                
+                                {% endif %}
+                                 {% if single_product.variation_set.weight %}
+                               <div class="product__size-wrap">
+                                    <div class="size-title">Weight: </div>
+                                    <select name="weight" class="form-control" required>
+                                        <option value="" disabled selected>Chose Weight</option>
+                                        {% for i in  single_product.variation_set.weight %}
+                                        <option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst}}</option>
+                                        {% endfor %}
+                                    </select>      
+                                </div>
+                                {% endif %}
                                 <div class="product__details-qty">
                                 {% if single_product.stock <= 0  %}
                                     <h5>Out of Stock</h5>
-                                    {% else %}
-                                    <div class="cart-plus-minus">
-                                        <input type="text" value="1">
-                                    </div>
+                                {% else %}
+                                    <form method="post" action="{% url 'add_cart' single_product.id %}">
+                                        {% csrf_token %}
+                                        <div class="cart-plus-minus"><input type="text" value="1"  id="quantity" name="quantity" >
+                                        <div class="dec qtybutton"><span>-</span></div><div class="inc qtybutton"><span>+</span></div></div>
                                         <button type="submit" class="add-btn">Add To Cart</button>
-                                    {% endif %}
+                                    </form>
+                                {% endif %}
                                 </div>
-                                
                                 <div class="product__wishlist-wrap">
                                     <a href="product-details.html"><i class="flaticon-love"></i>Add To Wishlist</a>
                                     <a href="product-details.html"><i class="flaticon-exchange"></i>Compare To Other</a>
@@ -171,7 +198,7 @@
                                 </div>
                                 <div class="product__details-checkout">
                                     <span class="title">Guaranteed Safe Checkout</span>
-                                    <img src="assets/img/products/card.png" alt="">
+                                    <img src="{% static 'assets/img/products/card.png' %}" alt="">
                                 </div>
                             </div>
                         </form>
@@ -190,21 +217,84 @@
                             </ul>
                             <div class="tab-content" id="myTabContent2">
                                 <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel" aria-labelledby="description-tab" tabindex="0">
-                                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet ante. ibero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.ea commodo consat. Duis aute irure dolor in reprehenderit   volup tate velitesse cillum dolore euy elit ale ruin irure dolor.uis aute irure dolor in reprehenderit n volup tate velit esse cillum,</p>
-                                    <p>habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet bero sit amet uam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.ea commodo consat.</p>
+                                   {{ single_product.full_description|safe }}
                                 </div>
                                 <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
-                                    <div class="product-desc-review">
-                                        <div class="product-desc-review-title mb-15">
-                                            <h5 class="title">Customer Reviews (0)</h5>
+                                   
+                                     <form action="{% url 'submit_review' single_product.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <h5>Write Your Review</h5>
+
+                                        <div>
+                                        <label>How do you rate this product?</label>
+                                        <br>
+                                        <div class="rate">
+                                            <input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+                                            <input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+                                            <input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+                                            <input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+                                            <input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+                                            <input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
                                         </div>
-                                        <div class="left-rc">
-                                            <p>No reviews yet</p>
+                                        <br>
+                                            <label>Review Title:</label>
+                                            <input type="text" class="form-control" name="subject">
+                                            <br>
+                                            <textarea name="review" rows="4" class="form-control"></textarea> <br> 
+                                           {% if user.is_authenticated  %}
+                                                {% if orderproduct %}
+                                                    <button type="submit" class="btn"  style="margin-bottom:10px;">Submit Review</button>
+                                                {% else %}
+                                                 <p>You must purches this product to post a review.</p>
+                                                {% endif %}
+                                            {% else %}
+                                            <p>You must be logged in to post a review. <span><a href="{% url 'login' %}"> Login now</a></span></p>
+                                            {% endif %}
+                                            
                                         </div>
-                                        <div class="right-rc">
-                                            <a href="#">Write a review</a>
-                                        </div>
+                                    <br>
+                                    {% include 'alerts.html' %}
+                                     </form>
+                                    <header class="section-heading"><h3>Customer Reviews </h3>  </header>
+                                   
+                                    <br>
+                                    {% for review in reviews %}
+                                    <div class="product-desc-review" style="margin-bottom:5px;">
+                                        <!-- Review Start-->
+                                        <div class="col-md-12">
+                                       
+                                        <article class="box mb-12">
+                                            <div class="icontext w-100">
+                                                <img src="{% static 'images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+
+                                                <div class="text" style="width: 100%;line-height: 1.2;">
+                                                    <span class="date text-muted float-md-right">{{review.updated_at}} </span>  
+                                                    <h6 class="mb-1" style="margin:8px;">{{review.user.full_name}}</h6>
+                                                    <div class="rating-star" style="margin-left:8px;margin-bottom:8px;">
+                                                        <span>
+                                                            <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+                                                            <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+                                                            <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+                                                            <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+                                                            <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div> <!-- icontext.// -->
+                                            <div class="mt-12">
+                                                <h6> {{review.subject}}</h6>
+                                                <p>{{review.review}} </p>	
+                                            </div>
+                                        </article>
+                                        </div> <!-- col.// -->
+                                        <!-- End Review -->
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -214,7 +304,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="section__title-two mb-20">
-                                <h2 class="title">Related Products <img src="{% static 'assets/img/images/title_shape.svg' %}" alt="" class="injectable">
+                                <h2 class="title">You might also like <img src="{% static 'assets/img/images/title_shape.svg' %}" alt="" class="injectable">
                                 </h2>
                             </div>
                         </div>
@@ -222,20 +312,23 @@
                     <div class="product__item-wrap">
                         <div class="swiper product-active">
                             <div class="swiper-wrapper">
+                            <!-- Start related products block-->
+                             {% for related in related_products %}
                                 <div class="swiper-slide">
                                     <div class="product__item">
                                         <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img01.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="sale-wrap">
-                                                <span>New</span>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
+                                            <a href="{{ related.get_url }}"><img src="{{ related.images.url }}" alt="{{ related.product_name }}"></a>
+                                             {% if related.sale_price %}
+                                                    <div class="sale-wrap sale-wrap-two">
+                                                        <span>Sale!</span>
+                                                    </div>
+                                            {% endif %}
+                                             <div class="product__add-cart">
+                                                {% if related.stock <= 0  %}
+                                                    <a href="#" class="btn"><i class="flaticon-shopping-bag"></i>Out of Stock</a>
+                                                {%else%}
+                                                    <a href="{% url 'add_cart' related.id %}" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="product__content">
@@ -249,168 +342,19 @@
                                                 </div>
                                                 <span>(2 Reviews)</span>
                                             </div>
-                                            <h4 class="title"><a href="product-details.html">Dog Harness-Neoprene Comfort Liner-Orange and ...</a></h4>
-                                            <h3 class="price">$12.00 <del>$25.00</del></h3>
+                                            <h4 class="title"><a href="{{ related.get_url }}">{{ related.product_name }}</a></h4>
+                                           {% if related.sale_price %}
+                                                <h3 class="price"> ${{ related.sale_price  |floatformat:2 }} <del>${{ related.price |floatformat:2 }}</del></h3>
+                                            {% else %}
+                                                <h3 class="price">${{ related.price  |floatformat:2 }}</h3>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="swiper-slide">
-                                    <div class="product__item">
-                                        <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img02.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="sale-wrap sale-wrap-two">
-                                                <span>Sale!</span>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="product__content">
-                                            <div class="product__reviews">
-                                                <div class="rating">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <span>(2 Reviews)</span>
-                                            </div>
-                                            <h4 class="title"><a href="product-details.html">Arm & Hammer Super Deodori zing Dog Shampoo, Pet Wash</a></h4>
-                                            <h3 class="price">$20.00 <del>$30.00</del></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product__item">
-                                        <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img03.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="product__content">
-                                            <div class="product__reviews">
-                                                <div class="rating">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <span>(2 Reviews)</span>
-                                            </div>
-                                            <h4 class="title"><a href="product-details.html">Milk-Bone Brushing Chews Daily Dental Dog Treats ...</a></h4>
-                                            <h3 class="price">$36.00 <del>$56.00</del></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product__item">
-                                        <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img04.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="sale-wrap sale-wrap-two">
-                                                <span>Sale!</span>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="product__content">
-                                            <div class="product__reviews">
-                                                <div class="rating">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <span>(2 Reviews)</span>
-                                            </div>
-                                            <h4 class="title"><a href="product-details.html">Two Door Top Load Plastic Kennel & Pet Carrier, Blue 19”</a></h4>
-                                            <h3 class="price">$18.00 <del>$33.00</del></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product__item">
-                                        <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img05.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="sale-wrap">
-                                                <span>New</span>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="product__content">
-                                            <div class="product__reviews">
-                                                <div class="rating">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <span>(2 Reviews)</span>
-                                            </div>
-                                            <h4 class="title"><a href="product-details.html">The Kitten House with Mat Sleeping Bed House</a></h4>
-                                            <h3 class="price">$19.00 <del>$28.00</del></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="product__item">
-                                        <div class="product__thumb">
-                                            <a href="product-details.html"><img src="{% static 'assets/img/products/products_img07.jpg' %}" alt="img"></a>
-                                            <div class="product__action">
-                                                <a href="product-details.html"><i class="flaticon-love"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-loupe"></i></a>
-                                                <a href="product-details.html"><i class="flaticon-exchange"></i></a>
-                                            </div>
-                                            <div class="sale-wrap sale-wrap-two">
-                                                <span>Sale!</span>
-                                            </div>
-                                            <div class="product__add-cart">
-                                                <a href="product-details.html" class="btn"><i class="flaticon-shopping-bag"></i>Add To Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="product__content">
-                                            <div class="product__reviews">
-                                                <div class="rating">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                </div>
-                                                <span>(2 Reviews)</span>
-                                            </div>
-                                            <h4 class="title"><a href="product-details.html">Two Door Top Load Plastic Kennel & Pet Carrier, Blue 19”</a></h4>
-                                            <h3 class="price">$18.00 <del>$33.00</del></h3>
-                                        </div>
-                                    </div>
-                                </div>
+                            {% empty %}
+                                <p>No related products found.</p>
+                            {% endfor %}
+                             <!-- End related products block-->
                             </div>
                         </div>
                         <div class="product__nav-wrap">
@@ -425,4 +369,5 @@
 
     </main>
     <!-- main-area-end -->
+
 {% endblock  %}

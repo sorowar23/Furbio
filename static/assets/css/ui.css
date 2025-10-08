@@ -685,7 +685,7 @@ dl[class=row] {
   display: flex;
 }
 .dlist-align dt {
-  width: 150px;
+
   word-wrap: break-word;
   font-weight: normal;
 }
@@ -1400,8 +1400,8 @@ a[class*=card]:hover .title {
 /* ================ PAGES HEADER ================== */
 /* ====================== shopping-cart ==================== */
 .table-shopping-cart.table td, .table-shopping-cart.table th {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 0rem;
+  padding-right: 0rem;
 }
 .table-shopping-cart .price-wrap {
   line-height: 1.2;

@@ -42,7 +42,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-4">Billing Address</h4>
-                            <form action="#" method="POST">
+                            <form action="{% url 'place_order' %}" method="POST">
                             {% csrf_token %}
                             <div class="row gutter-20">
                                 <div class="col-md-6">
@@ -149,6 +149,18 @@
                                         
                                     </tr>
                                 {% endfor %}
+                                 <tr>
+                                    <td></td>
+                                    <td>Estimated tax to be collected: <span style="float:right;"></span></td>
+                                    <td></td>
+                                    <td><dl class="dlist-align"><span>${{tax |floatformat:2}}</span></dl></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><dt style="font-weight:bold;">Order Total: <span style="float:right;"></span><dt></td>
+                                    <td></td>
+                                    <td><dl class="dlist-align"><dt><span><strong>${{grand_total |floatformat:2}}</strong></span></dt></dl></td>
+                                </tr>
                                 </tbody>
                             </table>
                             <hr>

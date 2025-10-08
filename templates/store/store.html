@@ -119,8 +119,8 @@
                             <div class="animal__widget">
                                 <h4 class="animal__widget-title">Filters</h4>
                                 <div class="sidebar-search-form">
-                                    <form action="#">
-                                        <input type="text" placeholder="Type Keywords. . .">
+                                     <form action="{% url 'search' %}" method="GET">
+                                        <input type="text" placeholder="Type Keywords. . ." name="keyword">
                                         <button type="submit"><i class="flaticon-loupe"></i></button>
                                     </form>
                                 </div>
@@ -135,108 +135,15 @@
                                 </div>
                             </div>
                             <div class="animal__widget">
-                                <h4 class="animal__widget-title">Pet Categories</h4>
+                                <h4 class="animal__widget-title">Product Categories</h4>
                                 <div class="courses-cat-list">
                                     <ul class="list-wrap">
- 									{% for category in links %}
+ 									{% for category in product_count_by_categories %}
                                         <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" onchange="if(this.checked){ window.location.href='{{ category.get_url }}'; }" id="cat_1">
-                                                <label class="form-check-label" for="cat_1">{{ category.category_name }} <span>(344)</span></label>
-                                            </div>
+                                        <a href="{{ category.get_url }}" style="color:#002169">  {{ category.category_name }} <span> ({{category.product_count}})</span> </a>
                                         </li>
                                     {% endfor %}
                                     </ul>
-                                </div>
-                            </div>
-                            <div class="animal__widget">
-                                <h4 class="animal__widget-title">Breeds</h4>
-                                <div class="courses-cat-list">
-                                    <ul class="list-wrap">
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bre_1">
-                                                <label class="form-check-label" for="bre_1">Airedale Terrier</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bre_2">
-                                                <label class="form-check-label" for="bre_2">American Eskimo</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bre_3">
-                                                <label class="form-check-label" for="bre_3">Basset Hound</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bre_4">
-                                                <label class="form-check-label" for="bre_4">Bernese Mountain Dog</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="bre_5">
-                                                <label class="form-check-label" for="bre_5">Bichon Frise</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="animal__widget">
-                                <h4 class="animal__widget-title">Gender</h4>
-                                <div class="courses-cat-list">
-                                    <ul class="list-wrap">
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="gender_1">
-                                                <label class="form-check-label" for="gender_1">Male (344)</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="gender_2">
-                                                <label class="form-check-label" for="gender_2">Female (21)</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="animal__widget">
-                                <h4 class="animal__widget-title">Location</h4>
-                                <div class="courses-cat-list">
-                                    <ul class="list-wrap">
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="loc_1">
-                                                <label class="form-check-label" for="loc_1">All</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="loc_2">
-                                                <label class="form-check-label" for="loc_2">NewYork City</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="loc_3">
-                                                <label class="form-check-label" for="loc_3">Kansas City</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="loc_4">
-                                                <label class="form-check-label" for="loc_4">NewJersey</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="apply-btn">
-                                    <a href="#" class="btn">Apply Now</a>
                                 </div>
                             </div>
                         </aside>

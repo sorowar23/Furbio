@@ -48,11 +48,11 @@
                                 <h4 class="footer__widget-title">Quick Links</h4>
                                 <div class="footer__link">
                                     <ul class="list-wrap">
-                                        <li><a href="animal.html">Animal Rescue</a></li>
-                                        <li><a href="contact.html">Humane Education</a></li>
-                                        <li><a href="contact.html">Caregivers</a></li>
-                                        <li><a href="blog.html">New & Blog</a></li>
-                                        <li><a href="gallery.html">Gallery</a></li>
+                                        <li><a href="#">Animal Rescue</a></li>
+                                        <li><a href="#">Humane Education</a></li>
+                                        <li><a href="#">Caregivers</a></li>
+                                        <li><a href="#">New & Blog</a></li>
+                                        <li><a href="#">Gallery</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -62,11 +62,10 @@
                                 <h4 class="footer__widget-title">Support</h4>
                                 <div class="footer__link">
                                     <ul class="list-wrap">
-                                        <li><a href="about.html">About us</a></li>
-                                        <li><a href="contact.html">Contact us</a></li>
-                                        <li><a href="reservation.html">Book Appointment</a></li>
-                                        <li><a href="faq.html">FAQ</a></li>
-                                        <li><a href="contact.html">Locations</a></li>
+                                        <li><a href="{% url 'about' %}">About us</a></li>
+                                        <li><a href="{% url 'contact' %}">Contact us</a></li>
+                                        <li><a href="{% url 'faq' %}">FAQ</a></li>
+                                        <li><a href="{% url 'contact' %}">Locations</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -95,16 +94,16 @@
                     <div class="row align-items-center">
                         <div class="col-lg-5">
                             <div class="copyright-text copyright-text-three">
-                                <p>Copyright © 2024. All Rights Reserved.</p>
+                                <p>Copyright © 2025. All Rights Reserved.</p>
                             </div>
                         </div>
                         <div class="col-lg-7">
                             <div class="footer__bottom-menu footer__bottom-menu-two">
                                 <ul class="list-wrap">
-                                    <li><a href="contact.html">Support</a></li>
-                                    <li><a href="contact.html">Terms & Conditions</a></li>
-                                    <li><a href="contact.html">Privacy Policy</a></li>
-                                    <li><a href="contact.html">Career</a></li>
+                                    <li><a href="#">Support</a></li>
+                                    <li><a href="#">Terms & Conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Career</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -136,8 +135,21 @@
         setTimeout(function(){
             $('#message').fadeout('slow')
         },4000)
+
+        var swiper = new Swiper('.swiper-slide', {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            enabled: false,  // slider disabled
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get("tab");
+            if (tab === "reviews") {
+                const reviewsTabButton = document.querySelector('[data-bs-target="#reviews-tab-pane"]');
+                if (reviewsTabButton) reviewsTabButton.click();
+            }
+        });
     </script>
 </body>
-
 </html>
 <!-- ========================= FOOTER END // ========================= -->
